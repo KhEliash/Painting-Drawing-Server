@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -43,11 +43,23 @@ async function run() {
     });
 
     // get for my carts
-    app.get('/myCart/:email', async(req,res)=>{
+    app.get("/myCart/:email", async (req, res) => {
       console.log(req.params);
-      const result=await craftCollection.find({email:req.params.email }).toArray();
+      const result = await craftCollection
+        .find({ email: req.params.email })
+        .toArray();
       res.send(result);
-    })
+    });
+
+    // get single product
+    app.get("/singleCraft/:id", async (req, res) => {
+      // console.log(req.params.id);
+      const result = await craftCollection.findOne({
+        _id: new ObjectId(req.params.id),
+      });
+      // console.log(result);
+      res.send(result);
+    });
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
