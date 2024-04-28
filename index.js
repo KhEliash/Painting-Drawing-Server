@@ -61,6 +61,28 @@ async function run() {
       res.send(result);
     });
 
+    // update craft
+    app.put("/updateCraft/:id", async (req, res) => {
+      console.log(req.params.id);
+      const query = { _id: new ObjectId(req.params.id) };
+      const data = {
+        $set: {
+          itemName: req.body.itemName,
+          image: req.body.image,
+          description: req.body.description,
+          price: req.body.price,
+          rating: req.body.rating,
+          processing_time: req.body.processing_time,
+          subcategory: req.body.subcategory,
+          customize: req.body.customize,
+          stock_status: req.body.stock_status,
+        },
+      };
+      const result = await craftCollection.updateOne(query, data);
+      console.log(result);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
