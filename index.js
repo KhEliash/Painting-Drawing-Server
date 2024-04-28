@@ -30,7 +30,6 @@ async function run() {
     // post data
     app.post("/addCraft", async (req, res) => {
       const craft = req.body;
-      console.log(craft);
       const result = await craftCollection.insertOne(craft);
       res.send(result);
     });
@@ -44,7 +43,6 @@ async function run() {
 
     // get for my carts
     app.get("/myCart/:email", async (req, res) => {
-      console.log(req.params);
       const result = await craftCollection
         .find({ email: req.params.email })
         .toArray();
@@ -53,17 +51,14 @@ async function run() {
 
     // get single product
     app.get("/singleCraft/:id", async (req, res) => {
-      // console.log(req.params.id);
       const result = await craftCollection.findOne({
         _id: new ObjectId(req.params.id),
       });
-      // console.log(result);
       res.send(result);
     });
 
     // update craft
     app.put("/updateCraft/:id", async (req, res) => {
-      console.log(req.params.id);
       const query = { _id: new ObjectId(req.params.id) };
       const data = {
         $set: {
@@ -79,7 +74,14 @@ async function run() {
         },
       };
       const result = await craftCollection.updateOne(query, data);
-      console.log(result);
+      res.send(result);
+    });
+
+    // delete
+    app.delete("/delete/:id", async (req, res) => {
+      const result = await craftCollection.deleteOne({
+        _id: new ObjectId(req.params.id),
+      });
       res.send(result);
     });
 
