@@ -8,7 +8,7 @@ const port = process.env.PORT || 5000;
 // Middleware
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://paintingdrawing-dd451.web.app"]
+    origin: ["http://localhost:5173", "https://paintingdrawing-dd451.web.app"],
   })
 );
 app.use(express.json());
@@ -30,6 +30,7 @@ async function run() {
     // await client.connect();
 
     const craftCollection = client.db("drawingCraft").collection("craft");
+    const categoryCollection = client.db("drawingCraft").collection("category");
 
     // post data
     app.post("/addCraft", async (req, res) => {
@@ -38,26 +39,38 @@ async function run() {
       res.send(result);
     });
 
-    // get data
+    // get data 
     app.get("/addCraft", async (req, res) => {
       const cursor = craftCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
 
+    // get data for category
+    app.get("/category", async (req, res) => {
+      const cursor = categoryCollection.find();
+      const result = await cursor.toArray();
+      console.log(result);
+      res.send(result);
+    });
+
     // get for my carts
     app.get("/myCart/:email", async (req, res) => {
+      console.log(req.params);
       const result = await craftCollection
         .find({ email: req.params.email })
         .toArray();
       res.send(result);
     });
 
+    // for custom
+
     // get single product
-    app.get("/singleCraft/:id", async(req, res) => {
-       const result = await craftCollection.findOne({_id: new ObjectId(req.params.id),
+    app.get("/singleCraft/:id", async (req, res) => {
+      const result = await craftCollection.findOne({
+        _id: new ObjectId(req.params.id),
       });
-       res.send(result);
+      res.send(result);
     });
 
     // update craft
